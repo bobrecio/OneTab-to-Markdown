@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
     <title>Convert OneTab to MD</title>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"
         integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
@@ -11,46 +9,39 @@
             $("#btnMakeMd").on("click", function () {
                 var oneTab = $.trim($("#oneTab").val());
                 var oneTabLines = oneTab.split('\n');
-
                 if (oneTab.length > 0) {
-                    //clearArea("#mdArea");
                     $("#mdArea").empty();
-                    oneTabLines.forEach(function (thisItem) {
-                        var thisURL = thisItem.split("|")[0].trim();
-                        var thisTitle = thisItem.split("|")[1].trim();
+                    oneTabLines.forEach(function (item) {
+                        var thisItem = item.split("|")
+                        var thisURL = thisItem[0].trim();
+                        // if we only have a URL, then set the filename as the title
+                        var thisTitle = (thisItem.length > 1) ? thisItem[1].trim() : thisURL.substring(thisURL.lastIndexOf("/")+1);
                         var thisMd = "- [ ] [" +
                             thisTitle + "](" +
                             thisURL + ")\n";
-                        //alert(thisMd);
                         $("#mdArea").append(thisMd);
                     })
                 } else {
                     alert("Nothing to process.");
                 }
-
             });
-
             $("#btnClearOneTab").on("click", function () {
                 $("#oneTab").val('');
             });
-
             $("#btnCopyMd").on("click", function () {
                 var copyText = document.getElementById("mdArea");
                 copyText.select();
                 copyText.setSelectionRange(0, 99999)
                 document.execCommand("copy");
                 alert("Copied the text: " + copyText.value);
-
             });
         });
-
         function clearArea(area) {
             alert("Clearing " + area);
             $(area).empty();
         }
     </script>
 </head>
-
 <body>
     <textarea id="oneTab" rows="25" cols="80"></textarea>
     <br>
@@ -60,5 +51,4 @@
     <button id="btnCopyMd" type="button">Copy MarkDown</button><br>
     <textarea id="mdArea" rows="25" cols="80"></textarea>
 </body>
-
 </html>
